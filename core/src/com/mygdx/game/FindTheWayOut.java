@@ -17,26 +17,29 @@ public class FindTheWayOut extends ApplicationAdapter {
 	Texture img;
 	int x, y;
 	int dx, dy;
+	int bWidth, bHeight;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		img = new Texture("Ball.png");
 		accelerometerAvail = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
-		x = Gdx.graphics.getWidth()/2;
-		y = Gdx.graphics.getHeight()/2;
+		x = 0;
+		y = 0;
 		dx = 0;
 		dy = 0;
+		bWidth = 100;
+		bHeight = 100;
 	}
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
+		ScreenUtils.clear(135/255f, 206/255f, 235/255f, 1);
 
 		changeGravity();
 
 		batch.begin();
-		batch.draw(img, x, y);
+		batch.draw(img, x, y, bWidth,bHeight);
 		batch.end();
 	}
 
@@ -48,20 +51,20 @@ public class FindTheWayOut extends ApplicationAdapter {
 			Matrix4 m = new Matrix4(mat);
 
 			Quaternion q = m.getRotation(new Quaternion());
-			dy += ((int)((-1)*(q.x*10)))%10;
-			dx += ((int)(q.y*10))%10;
-			if (( x > Gdx.graphics.getWidth() - img.getWidth() && dx > 0) || ( x < 0 && dx < 0) ){
+			dy += ((int)((-1)*(q.y*10)))%10;
+			dx += ((int)((-1)*(q.x*10)))%10;
+			if (( x > Gdx.graphics.getWidth() - bWidth && dx > 0) || ( x < 0 && dx < 0) ){
 				dx = 0;
-				if (x > Gdx.graphics.getWidth() - img.getWidth()){
-					x =  Gdx.graphics.getWidth() - img.getWidth();
+				if (x > Gdx.graphics.getWidth() - bWidth){
+					x =  Gdx.graphics.getWidth() - bWidth;
 				}else {
 					x = 0;
 				}
 			}
-			if (( y > Gdx.graphics.getHeight() - img.getHeight() && dy > 0) || ( y < 0 && dy < 0) ){
+			if (( y > Gdx.graphics.getHeight() - bHeight && dy > 0) || ( y < 0 && dy < 0) ){
 				dy = 0;
-				if (y > Gdx.graphics.getHeight() - img.getHeight()){
-					y =  Gdx.graphics.getHeight() - img.getHeight();
+				if (y > Gdx.graphics.getHeight() - bHeight){
+					y =  Gdx.graphics.getHeight() - bHeight;
 				}else {
 					y = 0;
 				}
