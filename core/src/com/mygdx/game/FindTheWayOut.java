@@ -7,29 +7,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.awt.Font;
 
 public class FindTheWayOut extends ApplicationAdapter {
-	SpriteBatch batch;
+	Ball ball;
+	Stage stage;
 	boolean accelerometerAvail;
-	Texture img;
-	int x, y;
-	int dx, dy;
-	int bWidth, bHeight;
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("Ball.png");
+		ball = new Ball();
+		stage = new Stage();
+		stage.addActor(ball);
 		accelerometerAvail = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
-		x = 0;
-		y = 0;
-		dx = 0;
-		dy = 0;
-		bWidth = 100;
-		bHeight = 100;
 	}
 
 	@Override
@@ -38,9 +31,8 @@ public class FindTheWayOut extends ApplicationAdapter {
 
 		changeGravity();
 
-		batch.begin();
-		batch.draw(img, x, y, bWidth,bHeight);
-		batch.end();
+		stage.act();
+		stage.draw();
 	}
 
 	private void changeGravity() {
@@ -51,26 +43,26 @@ public class FindTheWayOut extends ApplicationAdapter {
 			Matrix4 m = new Matrix4(mat);
 
 			Quaternion q = m.getRotation(new Quaternion());
-			dy += ((int)((-1)*(q.y*10)))%10;
-			dx += ((int)((-1)*(q.x*10)))%10;
-			if (( x > Gdx.graphics.getWidth() - bWidth && dx > 0) || ( x < 0 && dx < 0) ){
+			int dy = ((int)((-1)*(q.y*10)))%10;
+			int dx = ((int)((-1)*(q.x*10)))%10;
+			if (( ball.x > Gdx.graphics.getWidth() - ball.iWidth && dx > 0) || ( ball.x < 0 && dx < 0) ){
 				dx = 0;
-				if (x > Gdx.graphics.getWidth() - bWidth){
-					x =  Gdx.graphics.getWidth() - bWidth;
+				if (ball.x > Gdx.graphics.getWidth() - ball.iWidth){
+					ball.x =  Gdx.graphics.getWidth() - ball.iWidth;
 				}else {
-					x = 0;
+					ball.x = 0;
 				}
 			}
-			if (( y > Gdx.graphics.getHeight() - bHeight && dy > 0) || ( y < 0 && dy < 0) ){
+			if (( ball.y > Gdx.graphics.getHeight() - ball.iHeight && dy > 0) || ( ball.y < 0 && dy < 0) ){
 				dy = 0;
-				if (y > Gdx.graphics.getHeight() - bHeight){
-					y =  Gdx.graphics.getHeight() - bHeight;
+				if (ball.y > Gdx.graphics.getHeight() - ball.iHeight){
+					ball.y =  Gdx.graphics.getHeight() - ball.iHeight;
 				}else {
-					y = 0;
+					ball.y = 0;
 				}
 			}
-			x = (x + dx) % Gdx.graphics.getWidth();
-			y = (y + dy) % Gdx.graphics.getHeight();
+			ball.x = (ball.x + dx) % Gdx.graphics.getWidth();
+			ball.y = (ball.y + dy) % Gdx.graphics.getHeight();
 
 
 			System.out.println(q);
@@ -79,7 +71,5 @@ public class FindTheWayOut extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
 	}
 }
