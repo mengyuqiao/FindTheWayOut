@@ -3,8 +3,14 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,6 +22,9 @@ public class FindTheWayOut extends ApplicationAdapter {
 	Ball ball;
 	Stage stage;
 	boolean accelerometerAvail;
+	TiledMap tiledMap;
+	OrthographicCamera camera;
+	TiledMapRenderer tiledMapRenderer;
 	
 	@Override
 	public void create () {
@@ -23,6 +32,15 @@ public class FindTheWayOut extends ApplicationAdapter {
 		stage = new Stage();
 		stage.addActor(ball);
 		accelerometerAvail = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
+
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+
+		camera = new OrthographicCamera(w,h);
+		camera.setToOrtho(false,w,h);
+		camera.update();
+		tiledMap = new TmxMapLoader().load("test.tmx");
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 	}
 
 	@Override
@@ -30,6 +48,10 @@ public class FindTheWayOut extends ApplicationAdapter {
 		ScreenUtils.clear(135/255f, 206/255f, 235/255f, 1);
 
 		changeGravity();
+
+		camera.update();
+		tiledMapRenderer.setView(camera);
+		tiledMapRenderer.render();
 
 		stage.act();
 		stage.draw();
@@ -71,5 +93,6 @@ public class FindTheWayOut extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
+		stage.dispose();
 	}
 }

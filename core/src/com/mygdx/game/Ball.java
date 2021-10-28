@@ -32,8 +32,8 @@ public class Ball extends Actor {
     }
 
     public void init(){
-        iWidth = 100;
-        iHeight = 100;
+        iWidth = 50;
+        iHeight = 50;
         state = STATE.Idle;
         image = new Texture("Ball.png");
         currentFrame = new TextureRegion(image);
@@ -52,4 +52,6 @@ public class Ball extends Actor {
     public void act(float delta) {
         super.act(delta);
     }
+
+
 }
