@@ -20,8 +20,8 @@ public class Ball extends Actor {
     STATE state;
 
     public Ball(){
-        this.x = 0;
-        this.y = 0;
+        this.x = 100;
+        this.y = 100;
         init();
     }
 
